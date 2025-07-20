@@ -1,0 +1,28 @@
+# Python virtual environment
+venv/
+.venv/
+env/
+.env
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Build and distribution artifacts
+build/
+dist/
+*.egg-info/
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# Output folder for generated reports
+output/
+*.html
+
+# Output folder for generated reports
+output/
+*.html
