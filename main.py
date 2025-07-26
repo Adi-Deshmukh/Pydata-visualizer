@@ -1,5 +1,6 @@
 import pandas as pd
 from mylib.profiler import AnalysisReport 
+import pprint
 
 print("Script started successfully!")
 print("Attempting to create a DataFrame...")
@@ -21,5 +22,5 @@ report = AnalysisReport(df)
 result_dict = report.analyse()
 
 
-print("AnalysisReport object created successfully!")
-print("The 'report' object is holding a DataFrame with stats:", result_dict)
+print("--- Full Analysis Results ---")
+pprint.pprint(result_dict)
