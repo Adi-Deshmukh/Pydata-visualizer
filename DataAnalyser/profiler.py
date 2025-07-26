@@ -3,6 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+from .visualizer import get_plot_as_base64 
+
+
 class AnalysisReport:
     
     
@@ -27,7 +30,7 @@ class AnalysisReport:
             
             column_data = self.data[column_name] 
             
-            single_column_analysis = self._analyze_column(column_data)
+            single_column_analysis = self._analyze_column(column_data,column_name)
             
             variable_stats[column_name] = single_column_analysis
     
@@ -39,7 +42,7 @@ class AnalysisReport:
         return final_results 
 
     
-    def _analyze_column(self,column_data):
+    def _analyze_column(self,column_data,column_name):
         
         dtype = column_data.dtype
         missing_vals = column_data.isna().sum()
@@ -72,6 +75,10 @@ class AnalysisReport:
                 value_counts_dict = column_data.value_counts().to_dict()
                 column_details['value_counts'] = value_counts_dict
             
+            
+        plot_string = get_plot_as_base64(column_data, column_name)
+        column_details['plot_base64'] = plot_string
+        
             
         return column_details
         
