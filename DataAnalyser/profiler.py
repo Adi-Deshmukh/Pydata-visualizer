@@ -41,7 +41,7 @@ class AnalysisReport:
         
         return final_results 
 
-    
+    # used to get the details of a single columns
     def _analyze_column(self,column_data,column_name):
         
         dtype = column_data.dtype
@@ -54,7 +54,7 @@ class AnalysisReport:
             'missing_%': float(missing_percentage)
         }
         
-        
+        # used to check if the values are numeric or not to get column specific details
         if pd.api.types.is_numeric_dtype(column_data):
             description = column_data.describe().to_dict()
             column_details.update(description)
@@ -75,7 +75,8 @@ class AnalysisReport:
                 value_counts_dict = column_data.value_counts().to_dict()
                 column_details['value_counts'] = value_counts_dict
             
-            
+        
+        # used to pass the arguments to the visualizer.py to get the plot  
         plot_string = get_plot_as_base64(column_data, column_name)
         column_details['plot_base64'] = plot_string
         

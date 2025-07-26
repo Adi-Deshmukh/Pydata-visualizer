@@ -5,8 +5,8 @@ import io
 import base64
 
 
-
-def get_plot_as_base64(column_data,column_name): #for univariate plots
+#for univariate plots 
+def get_plot_as_base64(column_data,column_name): 
     plt.figure(figsize=(8,6))
     if pd.api.types.is_numeric_dtype(column_data):
         sns.histplot(column_data)
