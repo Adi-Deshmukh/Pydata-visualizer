@@ -41,7 +41,6 @@ class AnalysisReport:
     
     def _analyze_column(self,column_data):
         
-        
         dtype = column_data.dtype
         missing_vals = column_data.isna().sum()
         missing_percentage = (column_data.isna().sum()/self.data.shape[0])*100
@@ -51,6 +50,28 @@ class AnalysisReport:
             'missing_values': int(missing_vals),
             'missing_%': float(missing_percentage)
         }
+        
+        
+        if pd.api.types.is_numeric_dtype(column_data):
+            description = column_data.describe().to_dict()
+            column_details.update(description)
+        else:
+            num_unique = column_data.nunique()
+            column_details['unique_values'] = num_unique
+            if num_unique > 50:
+                
+                #high cardinality columns
+                
+                value_counts_dict = column_data.value_counts().nlargest(5).to_dict()
+                column_details['value_counts_top_5'] = value_counts_dict
+                
+            else:
+                
+                #for low cardinality columns
+            
+                value_counts_dict = column_data.value_counts().to_dict()
+                column_details['value_counts'] = value_counts_dict
+            
             
         return column_details
         
