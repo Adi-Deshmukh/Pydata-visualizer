@@ -1,5 +1,6 @@
 import pandas as pd
 from DataAnalyser.profiler import AnalysisReport 
+from DataAnalyser.report import generate_html_report
 import pprint
 
 print("Script started successfully!")
@@ -23,4 +24,5 @@ result_dict = report.analyse()
 
 
 print("--- Full Analysis Results ---")
-pprint.pprint(result_dict)
+
+generate_html_report(result_dict)

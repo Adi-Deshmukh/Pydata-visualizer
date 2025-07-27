@@ -18,10 +18,12 @@ def get_plot_as_base64(column_data,column_name):
         plt.title(column_name)
         plt.xticks(rotation=90,fontsize=10)
         
+        
 
     #creates a in memory buffer file to store the plot image 
     buf = io.BytesIO()
 
+    plt.tight_layout()
     plt.savefig(buf, format='png', bbox_inches = 'tight')
     
     plt.close()
