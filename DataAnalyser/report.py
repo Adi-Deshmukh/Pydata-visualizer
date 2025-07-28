@@ -14,8 +14,11 @@ def generate_html_report(profile_dict, output_filename="report.html"):
     
     template = env.get_template("report.html")
     
-    html_content = template.render(overview=profile_dict['overview'],
-                                    variables=profile_dict['variables'])
+    ''' html_content = template.render(overview=profile_dict['overview'],
+                                    variables=profile_dict['variables'],
+                                    sample_data= profile_dict['Sample_data']) '''
+                                    
+    html_content = template.render(profile=profile_dict)
     
     with open(output_filename, 'w', encoding='utf-8') as f:
         f.write(html_content)
