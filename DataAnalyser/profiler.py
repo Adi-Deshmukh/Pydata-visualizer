@@ -2,8 +2,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+from visions.typesets import CompleteSet  #used to get the types
+from .type_analyzers import _analyse_numeric,_analyse_category,_analyse_boolean
+from visions.types import Numeric, Boolean, Categorical
 from .visualizer import get_plot_as_base64 
+
 
 
 class AnalysisReport:
@@ -12,6 +15,7 @@ class AnalysisReport:
     def __init__(self,data, minimal=False):
         self.data = data
         self.minimal = minimal 
+        self.typeset = CompleteSet()
 
     def analyse(self):
         num_rows = self.data.shape[0] 
@@ -20,7 +24,7 @@ class AnalysisReport:
         
         overview_stats = {
         'num_Row': num_rows,
-        'num_Columns': num_columns,
+        'num_Columns': num_columns,   
         'duplicated_rows': int(num_duplicates)
         }
     
@@ -33,7 +37,7 @@ class AnalysisReport:
             
             single_column_analysis = self._analyze_column(column_data,column_name)
             
-            variable_stats[column_name] = single_column_analysis
+            variable_stats[column_name] = single_column_analysis # This is the column_details
         
         sample_data = self._data_sample()
     
@@ -58,33 +62,31 @@ class AnalysisReport:
             'Data_type': str(dtype),
             'missing_values': int(missing_vals),
             'missing_%': float(missing_percentage)
-        }
-        
-        # used to check if the values are numeric or not to get column specific details
+        }        
         
         if not self.minimal:
-            if pd.api.types.is_numeric_dtype(column_data):
-                description = column_data.describe().to_dict()
-                column_details.update(description)
-            else:
-                num_unique = column_data.nunique()
-                column_details['unique_values'] = num_unique
-                
-                if num_unique>50:
-                    column_details['cardinality']= 'High'
-                else:
-                    column_details['cardinality']= 'Low'
+        
+            inferred_type = self.typeset.infer_type(column_data)
             
-                top_5_counts = column_data.value_counts().nlargest(5).to_dict()
-                column_details['value_counts_top_5'] = top_5_counts
-                
+            type_dispatcher = {
+                Numeric: _analyse_numeric, # we add the references to the specialist functions
+                Categorical: _analyse_category,
+                Boolean: _analyse_boolean
+            }
+            
+            analyzer_function = type_dispatcher.get(inferred_type,_analyse_category) # Getting the Right Function
+            
+            type_specific_stats = analyzer_function(self,column_data)
+            
+            column_details.update(type_specific_stats)
             
             # used to pass the arguments to the visualizer.py to get the plot  
             plot_string = get_plot_as_base64(column_data, column_name)
             column_details['plot_base64'] = plot_string
                 
+            
         return column_details
-    
+
     
     def _data_sample(self):
         
@@ -97,4 +99,5 @@ class AnalysisReport:
         }
         
         return sample_data
-        
+    
+

@@ -16,11 +16,14 @@ classifiers = [
 ]
 
 dependencies = [
-    "pandas",
-    "numpy",
+    "imagehash",
+    "Jinja2",
     "matplotlib",
+    "numpy",
+    "pandas",
     "seaborn",
-    "Jinja2"
+    "shapely",
+    "visions[complete]"
 ]
 
 [project.urls]
