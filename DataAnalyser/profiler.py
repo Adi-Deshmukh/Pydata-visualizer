@@ -5,6 +5,7 @@ import seaborn as sns
 from visions.typesets import CompleteSet  #used to get the types
 from .type_analyzers import _analyse_numeric,_analyse_category,_analyse_boolean
 from visions.types import Numeric, Boolean, Categorical
+from .alerts import generate_alerts
 from .visualizer import get_plot_as_base64 
 
 
@@ -62,7 +63,11 @@ class AnalysisReport:
             'Data_type': str(dtype),
             'missing_values': int(missing_vals),
             'missing_%': float(missing_percentage)
-        }        
+        }   
+
+        alert_details = generate_alerts(column_details)
+        column_details['alerts'] = alert_details
+        
         
         if not self.minimal:
         

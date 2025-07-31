@@ -1,15 +1,15 @@
 import pandas as pd
 from visions.typesets import VisionsTypeset  #used to get the types
 
-
-
-
-
-
-
 def _analyse_numeric(self, column_data):
         numeric_stats = column_data.describe().to_dict()
         
+        # calculate skewness in data and add it
+        numeric_stats['skewness'] = column_data.skew()
+    
+        # calculate kurtosis and add it
+        numeric_stats['kurtosis'] = column_data.kurt()
+            
         return numeric_stats
     
 def _analyse_category(self,column_data):
