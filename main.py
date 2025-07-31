@@ -18,7 +18,7 @@ print("DataFrame created.")
 print("Attempting to create an AnalysisReport object...")
 
 # Create an instance of your class
-report = AnalysisReport(df,minimal=True)
+report = AnalysisReport(df)
 
 result_dict = report.analyse()
 
