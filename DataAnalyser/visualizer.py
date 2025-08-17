@@ -3,7 +3,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import io
 import base64
-import warnings # Import the warnings library
+import warnings 
 
 # --- FIX: Set a global font that supports a wider range of characters ---
 plt.rcParams['font.family'] = 'sans-serif'
@@ -46,7 +46,7 @@ def get_plot_as_base64(column_data, column_name) -> str:
         buf = io.BytesIO()
         plt.savefig(buf, format='png', bbox_inches='tight')
         plt.close()
-
+        
     # Encode buffer to a base64 string
     data = base64.b64encode(buf.getbuffer()).decode('ascii')
     

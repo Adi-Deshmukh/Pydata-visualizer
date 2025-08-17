@@ -1,12 +1,10 @@
-import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 from visions.typesets import CompleteSet  #used to get the types
 from .type_analyzers import _analyse_numeric,_analyse_category,_analyse_boolean
 from visions.types import Numeric, Boolean, Categorical
 from .alerts import generate_alerts
-from .visualizer import get_plot_as_base64 
+from .visualizer import get_plot_as_base64
+from .correlations import calculate_correlations,generate_correlation_heatmap
 
 
 
@@ -40,17 +38,27 @@ class AnalysisReport:
             
             variable_stats[column_name] = single_column_analysis # This is the column_details
         
-        sample_data = self._data_sample()
-    
+        sample_data = self._data_sample() # Used to show Head, Tail of the Dataset
+        
+        correlations = calculate_correlations(self.data) # Getting correlation Values
+
+        correlations_plots = {}   # We created this separately so that we don't overwrite the actual number data/raw data in correlations 
+        correlations_json = {} # we create this to solve the type error 
+        for key,value in correlations.items():
+            if isinstance(value, pd.DataFrame) and value.shape[0] > 1:
+                correlations_plots[key] = generate_correlation_heatmap(value)
+                correlations_json[key] = value.to_dict() # Convert DataFrame to JSON-compatible format for index.html
+
         final_results = {
             'overview': overview_stats,
             'variables': variable_stats,
-            'Sample_data': sample_data
+            'Sample_data': sample_data,
+            'Correlations_Plots': correlations_plots, 
+            'Correlations_JSON': correlations_json 
         }
-        
-        
-        
-        return final_results 
+
+
+        return final_results
 
     # used to get the details of a single columns
     def _analyze_column(self,column_data,column_name):
@@ -72,7 +80,7 @@ class AnalysisReport:
         if not self.minimal:
         
             inferred_type = self.typeset.infer_type(column_data)
-            
+            # We use the inferred type to determine which analysis function to call
             type_dispatcher = {
                 Numeric: _analyse_numeric, # we add the references to the specialist functions
                 Categorical: _analyse_category,
