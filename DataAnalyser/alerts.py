@@ -1,13 +1,13 @@
 
 
 # we give column details as the input
-def generate_alerts(column_details):
+def generate_alerts(column_details, settings=None):
     alerts = []
     
     skewness = column_details.get("skewness")
     
     if skewness is not None:
-        if abs(skewness)>2:
+        if abs(skewness)> settings.skewness_threshold:
             new_alert = {
                 "alert_type":"skewness",
                 "message": f"Data is highly skewed (value: {skewness:.2f})",

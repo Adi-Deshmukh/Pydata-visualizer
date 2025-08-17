@@ -1,7 +1,8 @@
 import pandas as pd
 from visions.typesets import VisionsTypeset  #used to get the types
 
-def _analyse_numeric(self, column_data):
+
+def _analyse_numeric(report_object, column_data):
         numeric_stats = column_data.describe().to_dict()
         
         # calculate skewness in data and add it
@@ -12,7 +13,7 @@ def _analyse_numeric(self, column_data):
             
         return numeric_stats
     
-def _analyse_category(self,column_data):
+def _analyse_category(report_object,column_data):
     
     categorical_stats={}
     
@@ -25,13 +26,13 @@ def _analyse_category(self,column_data):
     else:
         categorical_stats['cardinality']= 'Low'
 
-    top_5_counts = column_data.value_counts().nlargest(5).to_dict()
-    categorical_stats['value_counts_top_10'] = top_5_counts
-    
+    top_n_counts = column_data.value_counts().nlargest(report_object.settings.top_n_values).to_dict()
+    categorical_stats['value_counts_top_n'] = top_n_counts
+
     return categorical_stats
-    
-    
-def _analyse_boolean(self,column_data):
+
+
+def _analyse_boolean(report_object,column_data):
     value_counts = column_data.value_counts().to_dict()
     
     bool_stats = {

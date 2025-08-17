@@ -1,4 +1,5 @@
 import pandas as pd
+import pydantic
 from visions.typesets import CompleteSet  #used to get the types
 from .type_analyzers import _analyse_numeric,_analyse_category,_analyse_boolean
 from visions.types import Numeric, Boolean, Categorical
@@ -8,12 +9,20 @@ from .correlations import calculate_correlations,generate_correlation_heatmap
 
 
 
-class AnalysisReport:
-    
-    
-    def __init__(self,data, minimal=False):
+class Settings(pydantic.BaseModel):
+    """
+    Settings for the analysis report.
+    """
+    minimal: bool = False
+    top_n_values: int = 10
+    skewness_threshold: float = 1.0
+
+
+class AnalysisReport:    
+
+    def __init__(self,data, settings: Settings = None):
         self.data = data
-        self.minimal = minimal 
+        self.settings = settings or Settings()
         self.typeset = CompleteSet()
 
     def analyse(self):
@@ -73,12 +82,13 @@ class AnalysisReport:
             'missing_%': float(missing_percentage)
         }   
 
+    # Generate alerts for the column
         alert_details = generate_alerts(column_details)
         column_details['alerts'] = alert_details
-        
-        
-        if not self.minimal:
-        
+
+
+        if not self.settings.minimal: # If minimal is False, we perform basic analysis
+
             inferred_type = self.typeset.infer_type(column_data)
             # We use the inferred type to determine which analysis function to call
             type_dispatcher = {
@@ -113,4 +123,5 @@ class AnalysisReport:
         
         return sample_data
     
+
 
