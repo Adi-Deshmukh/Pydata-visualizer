@@ -1,10 +1,11 @@
 [project]
-name = "data-visualizer"
+name = "Pydata-visualizer"
 version = "0.1.0"
 authors = [
     {name="Aditya Deshmukh", email="adideshmukh@gmail.com"},
 ]
-license = { file = "LICENSE" }
+
+license = { text = "MIT" }
 
 description = "A Python library for Exploratory Data Analysis and Profiling."
 readme = "README.md"
@@ -12,7 +13,6 @@ requires-python = ">=3.8"
 
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 
@@ -32,6 +32,10 @@ dependencies = [
     
 ]
 
+[tool.setuptools.packages.find]
+include = ["data_visualizer"]
+
 [project.urls]
 "Homepage" = "https://github.com/Adi-Deshmukh/Data_Profiler"
+
 
