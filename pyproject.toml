@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = [
     {name="Aditya Deshmukh", email="adideshmukh@gmail.com"},
 ]
+license = { file = "LICENSE" }
 
 description = "A Python library for Exploratory Data Analysis and Profiling."
 readme = "README.md"
