@@ -1,11 +1,21 @@
+import warnings
+
+# This will suppress all FutureWarnings
+warnings.filterwarnings('ignore', category=FutureWarning)
+
+# This will suppress all UserWarnings
+warnings.filterwarnings('ignore', category=UserWarning)
+
+
 import pandas as pd
 import pydantic
 from visions.typesets import CompleteSet  #used to get the types
-from .type_analyzers import _analyse_numeric,_analyse_category,_analyse_boolean
-from visions.types import Numeric, Boolean, Categorical
+from .type_analyzers import  _analyse_generic
+from .type_registry import analyzer_registry
 from .alerts import generate_alerts
 from .visualizer import get_plot_as_base64
 from .correlations import calculate_correlations,generate_correlation_heatmap
+
 
 
 
@@ -88,22 +98,14 @@ class AnalysisReport:
 
 
         if not self.settings.minimal: # If minimal is False, we perform basic analysis
+            
+            inferred_type = self.typeset.infer_type(column_data) # or np.dtype(column_data)
+            
+            registry_func = analyzer_registry.get(inferred_type,_analyse_generic) # Get the registered analyzer function
 
-            inferred_type = self.typeset.infer_type(column_data)
-            # We use the inferred type to determine which analysis function to call
-            type_dispatcher = {
-                Numeric: _analyse_numeric, # we add the references to the specialist functions
-                Categorical: _analyse_category,
-                Boolean: _analyse_boolean
-            }
+            column_details.update(registry_func(self,column_data))
             
-            analyzer_function = type_dispatcher.get(inferred_type,_analyse_category) # Getting the Right Function
-            
-            type_specific_stats = analyzer_function(self,column_data)
-            
-            column_details.update(type_specific_stats)
-            
-            # used to pass the arguments to the visualizer.py to get the plot  
+            # used to pass the arguments to the visualizer.py to get the plot
             plot_string = get_plot_as_base64(column_data, column_name)
             column_details['plot_base64'] = plot_string
                 

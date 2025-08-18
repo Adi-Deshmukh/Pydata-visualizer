@@ -1,7 +1,10 @@
 import pandas as pd
+import numpy as np
 from visions.typesets import VisionsTypeset  #used to get the types
+from visions.types import Numeric, Boolean, Categorical, String, Object
+from .type_registry import register_analyzer
 
-
+@register_analyzer(Numeric)
 def _analyse_numeric(report_object, column_data):
         numeric_stats = column_data.describe().to_dict()
         
@@ -12,14 +15,18 @@ def _analyse_numeric(report_object, column_data):
         numeric_stats['kurtosis'] = column_data.kurt()
             
         return numeric_stats
-    
+
+
+@register_analyzer(Object)
+@register_analyzer(String)
+@register_analyzer(Categorical)
 def _analyse_category(report_object,column_data):
     
     categorical_stats={}
     
     num_unique = column_data.nunique()
     categorical_stats['unique_values'] = num_unique
-    
+    categorical_stats['most_frequent'] = (column_data.mode().iloc[0])
     if num_unique>50:
         
         categorical_stats['cardinality']= 'High'
@@ -31,7 +38,7 @@ def _analyse_category(report_object,column_data):
 
     return categorical_stats
 
-
+@register_analyzer(Boolean)
 def _analyse_boolean(report_object,column_data):
     value_counts = column_data.value_counts().to_dict()
     
@@ -40,5 +47,11 @@ def _analyse_boolean(report_object,column_data):
     }
     
     return bool_stats
-    
-    
+
+def _analyse_generic(report_object,column_data):
+    generic_stats = {
+        'num_unique': str(column_data.nunique()),
+        
+    }
+
+    return generic_stats
