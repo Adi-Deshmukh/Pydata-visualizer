@@ -15,7 +15,7 @@ from .type_registry import analyzer_registry
 from .alerts import generate_alerts
 from .visualizer import get_plot_as_base64
 from .correlations import calculate_correlations,generate_correlation_heatmap
-# for console output
+from .report import generate_html_report 
 
 from tqdm import tqdm
 from colorama import Fore, Style, init
@@ -36,6 +36,7 @@ class AnalysisReport:
         self.data = data
         self.settings = settings or Settings()
         self.typeset = CompleteSet()
+        self.results = None
 
     def analyse(self):
 
@@ -71,10 +72,11 @@ class AnalysisReport:
 
         correlations_plots = {}   # We created this separately so that we don't overwrite the actual number data/raw data in correlations 
         correlations_json = {} # we create this to solve the type error 
-        for key,value in correlations.items():
-            if isinstance(value, pd.DataFrame) and value.shape[0] > 1:
-                correlations_plots[key] = generate_correlation_heatmap(value)
-                correlations_json[key] = value.to_dict() # Convert DataFrame to JSON-compatible format for index.html
+        if correlations:
+            for key,value in correlations.items():
+                if isinstance(value, pd.DataFrame) and value.shape[0] > 1:
+                    correlations_plots[key] = generate_correlation_heatmap(value)
+                    correlations_json[key] = value.to_dict() # Convert DataFrame to JSON-compatible format for index.html
 
         final_results = {
             'overview': overview_stats,
@@ -85,8 +87,20 @@ class AnalysisReport:
         }
 
         print(Fore.GREEN + "--- Full Analysis Done ---" + Style.BRIGHT)
+        self.results = final_results
         return final_results
         
+
+    def to_html(self, filename="report.html"):
+        """
+        A convenience method that runs the analysis and generates the HTML report.
+        """
+        # First, make sure the analysis has been run
+        if self.results is None:
+            print("Performing analysis...")
+            self.analyse()
+        generate_html_report(self.results, filename)
+    
 
     # used to get the details of a single columns
     def _analyze_column(self,column_data,column_name):

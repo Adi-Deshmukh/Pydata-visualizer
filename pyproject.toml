@@ -1,5 +1,5 @@
 [project]
-name = "data_profiler"
+name = "data-visualizer"
 version = "0.1.0"
 authors = [
     {name="Aditya Deshmukh", email="adideshmukh@gmail.com"},

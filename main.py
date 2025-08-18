@@ -1,11 +1,8 @@
 
 
 import pandas as pd
-from DataAnalyser.profiler import AnalysisReport, Settings 
-from DataAnalyser.report import generate_html_report
-
-
-print("Script started successfully!")
+from data_visualizer.profiler import AnalysisReport, Settings 
+from data_visualizer.report import generate_html_report
 
 
 
@@ -21,7 +18,4 @@ report_settings = Settings(
 # Create an instance of your class
 report = AnalysisReport(df, settings=report_settings)
 
-result_dict = report.analyse()
-
-
-generate_html_report(result_dict)
+report.to_html(filename="report.html")
