@@ -1,5 +1,8 @@
 import os
 from jinja2 import Environment, FileSystemLoader
+from colorama import Fore, Style, init
+init(autoreset=True)  # This makes sure each print statement resets to the default color
+
 
 
 def generate_html_report(profile_dict, output_filename="report.html"):
@@ -23,4 +26,4 @@ def generate_html_report(profile_dict, output_filename="report.html"):
     with open(output_filename, 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-    print(f"Report successfully generated: {output_filename}")
+    print(Fore.GREEN + f"Report successfully generated: {output_filename}" + Style.BRIGHT)

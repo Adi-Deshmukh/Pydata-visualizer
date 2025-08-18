@@ -15,9 +15,11 @@ from .type_registry import analyzer_registry
 from .alerts import generate_alerts
 from .visualizer import get_plot_as_base64
 from .correlations import calculate_correlations,generate_correlation_heatmap
+# for console output
 
-
-
+from tqdm import tqdm
+from colorama import Fore, Style, init
+init(autoreset=True)  # This makes sure each print statement resets to the default color
 
 class Settings(pydantic.BaseModel):
     """
@@ -36,6 +38,10 @@ class AnalysisReport:
         self.typeset = CompleteSet()
 
     def analyse(self):
+
+        print(Fore.GREEN + "Starting analysis..." + Style.BRIGHT)
+        print(Fore.YELLOW + "Attempting to create an AnalysisReport object..." + Style.BRIGHT)
+
         num_rows = self.data.shape[0] 
         num_columns = self.data.shape[1] 
         num_duplicates = self.data.duplicated().sum()
@@ -48,11 +54,11 @@ class AnalysisReport:
     
         variable_stats = {}
         columns = self.data.columns
-        
-        for column_name in columns:
-            
-            column_data = self.data[column_name] 
-            
+
+        for column_name in tqdm(columns, desc="Analyzing columns", unit="column"):
+
+            column_data = self.data[column_name]
+
             single_column_analysis = self._analyze_column(column_data,column_name)
             
             variable_stats[column_name] = single_column_analysis # This is the column_details
@@ -76,8 +82,9 @@ class AnalysisReport:
             'Correlations_JSON': correlations_json 
         }
 
-
+        print(Fore.GREEN + "--- Full Analysis Done ---" + Style.BRIGHT)
         return final_results
+        
 
     # used to get the details of a single columns
     def _analyze_column(self,column_data,column_name):
@@ -123,7 +130,10 @@ class AnalysisReport:
             'Tail': tail_10
         }
         
+        
         return sample_data
     
+    
+
 
 

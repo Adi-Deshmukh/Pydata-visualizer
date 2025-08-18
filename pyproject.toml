@@ -26,6 +26,8 @@ dependencies = [
     "seaborn",
     "shapely",
     "visions[complete]",
+    "tqdm",
+    "colorama"
     
 ]
 
