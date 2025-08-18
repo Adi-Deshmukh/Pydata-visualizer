@@ -20,7 +20,7 @@ def get_plot_as_base64(column_data, column_name) -> str:
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
 
-        plt.figure(figsize=(8, 6))
+        plt.figure(figsize=(6, 4))
         plt.style.use('seaborn-v0_8-whitegrid')
 
         if pd.api.types.is_numeric_dtype(column_data):

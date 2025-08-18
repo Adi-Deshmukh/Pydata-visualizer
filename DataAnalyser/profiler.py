@@ -49,7 +49,9 @@ class AnalysisReport:
         overview_stats = {
         'num_Row': num_rows,
         'num_Columns': num_columns,   
-        'duplicated_rows': int(num_duplicates)
+        'duplicated_rows': int(num_duplicates),
+        'missing_values': int(self.data.isna().sum().sum()),
+        'missing_percentage': float(self.data.isna().sum().sum()) / self.data.shape[0] * 100
         }
     
         variable_stats = {}

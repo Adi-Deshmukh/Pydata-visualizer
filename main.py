@@ -9,12 +9,11 @@ print("Script started successfully!")
 
 
 
-
 #df = pd.read_csv(r"C:\Users\kiran\Downloads\netflix.csv")
 df = pd.read_csv(r"C:\Users\kiran\final_vg.csv")
 
 report_settings = Settings(
-    minimal=True,          #  want a fast report
+    minimal=False,          #  want a fast report
     top_n_values=3,        #  the top 3 values
     skewness_threshold=2.0 #  tolerance for skewness
 )
