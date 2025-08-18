@@ -20,6 +20,11 @@ dist/
 .vscode/
 .idea/
 
+
+# Temporary test scripts
+temp_test_scripts/
+test_installs.py
+
 # Output folder for generated reports
 output/
 *.html
