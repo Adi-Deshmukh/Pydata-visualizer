@@ -1,4 +1,4 @@
-# Python virtual environment
+# Python virtual environments
 venv/
 .venv/
 env/
@@ -9,26 +9,24 @@ test_env/
 __pycache__/
 *.pyc
 *.pyo
-*.pyd   
+*.pyd
 
 # Build and distribution artifacts
 build/
 dist/
 *.egg-info/
 
+# Sphinx documentation build output
+docs/build/
+
 # IDE-specific files
 .vscode/
 .idea/
-
 
 # Temporary test scripts
 temp_test_scripts/
 test_installs.py
 
-# Output folder for generated reports
+# Output files and folders
 output/
-*.html
-
-# Output folder for generated reports
-output/
-*.html
+report.html

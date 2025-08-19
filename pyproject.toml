@@ -1,6 +1,6 @@
 [project]
 name = "Pydata-visualizer"
-version = "0.1.1"
+version = "0.2.0"
 authors = [
     {name="Aditya Deshmukh", email="adideshmukh2005@gmail.com"},
 ]
@@ -39,6 +39,5 @@ include = ["data_visualizer"]
 
 
 [project.urls]
-"Homepage" = "https://github.com/Adi-Deshmukh/Data_Profiler"
-
-
+Homepage = "https://github.com/your-username/pydata-visualizer"
+Documentation = "https://pydata-visualizer.readthedocs.io"
