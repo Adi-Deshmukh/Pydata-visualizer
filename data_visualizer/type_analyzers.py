@@ -1,9 +1,12 @@
 import pandas as pd
 import numpy as np
 from visions.typesets import VisionsTypeset  #used to get the types
-from visions.types import Numeric, Boolean, Categorical, String, Object
+from visions.types import Numeric, Boolean, Categorical, String, Object, Float, Integer
 from .type_registry import register_analyzer
 
+
+@register_analyzer(Float)
+@register_analyzer(Integer)
 @register_analyzer(Numeric)
 def _analyse_numeric(report_object, column_data):
         numeric_stats = column_data.describe().to_dict()

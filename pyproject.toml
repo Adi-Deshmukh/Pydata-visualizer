@@ -2,7 +2,7 @@
 name = "Pydata-visualizer"
 version = "0.1.1"
 authors = [
-    {name="Aditya Deshmukh", email="adideshmukh@gmail.com"},
+    {name="Aditya Deshmukh", email="adideshmukh2005@gmail.com"},
 ]
 
 license = { text = "MIT" }
