@@ -2,20 +2,6 @@
 
 Welcome to the official documentation for Pydata-visualizer, a powerful Python library for exploratory data analysis and data profiling.
 
-```{toctree}
-:maxdepth: 2
-:caption: Contents:
-:glob:
-
-README
-INSTALLATION
-USER_GUIDE
-DOCUMENTATION
-EXAMPLES
-DOCS_OVERVIEW
-PYPI_DESCRIPTION
-```
-
 ## Overview
 
 Pydata-visualizer is designed to help data scientists and analysts quickly explore, understand, and visualize their datasets. With minimal code, you can generate comprehensive reports and gain insights into your data's structure, distribution, and quality.

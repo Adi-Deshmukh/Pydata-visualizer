@@ -5,10 +5,11 @@ Welcome to pydata-visualizer's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   DOCS_OVERVIEW
+   overview
    README
    INSTALLATION
    USER_GUIDE
-   EXAMPLES
    DOCUMENTATION
+   EXAMPLES
    PYPI_DESCRIPTION
+   DOCS_OVERVIEW
