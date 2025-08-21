@@ -41,8 +41,8 @@ report.to_html("report.html")
 
 ## Additional Resources
 
-- GitHub Repository: [https://github.com/Adi-Deshmukh/Data_Profiler](https://github.com/Adi-Deshmukh/Data_Profiler)
-- Issue Tracker: [https://github.com/Adi-Deshmukh/Data_Profiler/issues](https://github.com/Adi-Deshmukh/Data_Profiler/issues)
+- GitHub Repository: [https://github.com/Adi-Deshmukh/Pydata-visualizer](https://github.com/Adi-Deshmukh/Pydata-visualizer)
+- Issue Tracker: [https://github.com/Adi-Deshmukh/Pydata-visualizer/issues](https://github.com/Adi-Deshmukh/Pydata-visualizer/issues)
 - PyPI Package: [https://pypi.org/project/pydata-visualizer/](https://pypi.org/project/pydata-visualizer/)
 
 ## Contributing

@@ -1,6 +1,6 @@
 [project]
 name = "Pydata-visualizer"
-version = "0.2.1"
+version = "0.2.3"
 authors = [
     {name="Aditya Deshmukh", email="adideshmukh2005@gmail.com"},
 ]
@@ -37,7 +37,8 @@ include-package-data = true
 [tool.setuptools.packages.find]
 include = ["data_visualizer"]
 
-
 [project.urls]
-Homepage = "https://github.com/your-username/pydata-visualizer"
+Homepage = "https://github.com/Adi-Deshmukh/Pydata-visualizer"
 Documentation = "https://pydata-visualizer.readthedocs.io/en/latest/"
+"Bug Tracker" = "https://github.com/Adi-Deshmukh/Pydata-visualizer/issues"
+"Source Code" = "https://github.com/Adi-Deshmukh/Pydata-visualizer"

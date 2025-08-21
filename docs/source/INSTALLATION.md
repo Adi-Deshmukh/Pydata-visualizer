@@ -32,7 +32,7 @@ pip install "pydata-visualizer[complete]"
 To install the latest development version:
 
 ```bash
-pip install git+https://github.com/Adi-Deshmukh/Data_Profiler.git
+pip install git+https://github.com/Adi-Deshmukh/Pydata-visualizer.git
 ```
 
 ### Local Development Installation
@@ -40,8 +40,8 @@ pip install git+https://github.com/Adi-Deshmukh/Data_Profiler.git
 For development purposes, you can install the package in editable mode:
 
 ```bash
-git clone https://github.com/Adi-Deshmukh/Data_Profiler.git
-cd Data_Profiler
+git clone https://github.com/Adi-Deshmukh/Pydata-visualizer.git
+cd Pydata-visualizer
 pip install -e .
 ```
 

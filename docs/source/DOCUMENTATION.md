@@ -39,8 +39,8 @@ pip install pydata-visualizer
 ### Install from Source
 
 ```bash
-git clone https://github.com/Adi-Deshmukh/Data_Profiler.git
-cd Data_Profiler
+git clone https://github.com/Adi-Deshmukh/Pydata-visualizer.git
+cd Pydata-visualizer
 pip install -e .
 ```
 

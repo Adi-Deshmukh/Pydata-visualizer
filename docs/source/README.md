@@ -8,12 +8,12 @@ A powerful and intuitive Python library for exploratory data analysis and data p
 
 ## Features
 
-- 📊 **Comprehensive Data Profiling**: Analyze numerical, categorical, boolean, and string data types
-- 🔍 **Automated Data Quality Checks**: Detect missing values, outliers, skewed distributions, and more
-- 📈 **Interactive Visualizations**: Generate distribution plots, correlations heatmaps, and statistical charts
-- 📝 **Rich HTML Reports**: Export analysis to visually appealing and shareable HTML reports
-- ⚡ **Performance Optimized**: Fast analysis even on large datasets
-- 🔄 **Correlation Analysis**: Calculate Pearson, Spearman, and Cramér's V correlations between variables
+-  **Comprehensive Data Profiling**: Analyze numerical, categorical, boolean, and string data types
+-  **Automated Data Quality Checks**: Detect missing values, outliers, skewed distributions, and more
+-  **Interactive Visualizations**: Generate distribution plots, correlations heatmaps, and statistical charts
+-  **Rich HTML Reports**: Export analysis to visually appealing and shareable HTML reports
+-  **Performance Optimized**: Fast analysis even on large datasets
+-  **Correlation Analysis**: Calculate Pearson, Spearman, and Cramér's V correlations between variables
 
 ## Installation
 
@@ -161,4 +161,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 Created by Aditya Deshmukh (adideshmukh2005@gmail.com)
 
-GitHub: [https://github.com/Adi-Deshmukh/Data_Profiler](https://github.com/Adi-Deshmukh/Data_Profiler)
+GitHub: [https://github.com/Adi-Deshmukh/Pydata-visualizer](https://github.com/Adi-Deshmukh/Pydata-visualizer)

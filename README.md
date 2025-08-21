@@ -161,4 +161,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 Created by Aditya Deshmukh (adideshmukh2005@gmail.com)
 
-GitHub: [https://github.com/Adi-Deshmukh/Data_Profiler](https://github.com/Adi-Deshmukh/Data_Profiler)
+GitHub: [https://github.com/Adi-Deshmukh/Pydata-visualizer](https://github.com/Adi-Deshmukh/Pydata-visualizer)

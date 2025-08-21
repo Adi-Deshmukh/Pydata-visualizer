@@ -281,4 +281,4 @@ webbrowser.open('file://' + os.path.abspath(report_path))
 
 ## Conclusion
 
-This guide covered the essential aspects of using Pydata-visualizer for data analysis and profiling. For more detailed information, refer to the [full documentation](https://github.com/Adi-Deshmukh/Data_Profiler) or explore the source code.
+This guide covered the essential aspects of using Pydata-visualizer for data analysis and profiling. For more detailed information, refer to the [full documentation](https://github.com/Adi-Deshmukh/Pydata-visualizer) or explore the source code.

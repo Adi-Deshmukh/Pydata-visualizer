@@ -69,9 +69,9 @@ report.to_html("custom_report.html")
 
 ## Links
 
-- Homepage: [https://github.com/Adi-Deshmukh/Data_Profiler](https://github.com/Adi-Deshmukh/Data_Profiler)
-- Documentation: [https://github.com/Adi-Deshmukh/Data_Profiler/blob/main/DOCUMENTATION.md](https://github.com/Adi-Deshmukh/Data_Profiler/blob/main/DOCUMENTATION.md)
-- Bug Reports: [https://github.com/Adi-Deshmukh/Data_Profiler/issues](https://github.com/Adi-Deshmukh/Data_Profiler/issues)
+- Homepage: [https://github.com/Adi-Deshmukh/Pydata-visualizer](https://github.com/Adi-Deshmukh/Pydata-visualizer)
+- Documentation: [https://github.com/Adi-Deshmukh/Pydata-visualizer/blob/main/DOCUMENTATION.md](https://github.com/Adi-Deshmukh/Pydata-visualizer/blob/main/DOCUMENTATION.md)
+- Bug Reports: [https://github.com/Adi-Deshmukh/Pydata-visualizer/issues](https://github.com/Adi-Deshmukh/Pydata-visualizer/issues)
 
 ## License
 
