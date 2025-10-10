@@ -9,6 +9,7 @@ warnings.filterwarnings('ignore', category=UserWarning)
 
 import pandas as pd
 import pydantic
+from pydantic import Field
 from visions.typesets import CompleteSet  #used to get the types
 from .type_analyzers import  _analyse_generic
 from .type_registry import analyzer_registry
@@ -16,19 +17,11 @@ from .alerts import generate_alerts
 from .visualizer import get_plot_as_base64
 from .correlations import calculate_correlations,generate_correlation_heatmap
 from .report import generate_html_report 
-
+from .settings import Settings
 from tqdm import tqdm
 from colorama import Fore, Style, init
+from visions.types import Float, Integer
 init(autoreset=True)  # This makes sure each print statement resets to the default color
-
-class Settings(pydantic.BaseModel):
-    """
-    Settings for the analysis report.
-    """
-    minimal: bool = False
-    top_n_values: int = 10
-    skewness_threshold: float = 1.0
-
 
 class AnalysisReport:    
 
@@ -103,36 +96,34 @@ class AnalysisReport:
     
 
     # used to get the details of a single columns
-    def _analyze_column(self,column_data,column_name):
-        
+    from visions.types import Float, Integer  # Add to imports
+
+    def _analyze_column(self, column_data, column_name):
+        """
+        Analyze a single column and return its details.
+        """
         dtype = column_data.dtype
         missing_vals = column_data.isna().sum()
-        missing_percentage = (column_data.isna().sum()/self.data.shape[0])*100
-        
+        missing_percentage = (missing_vals / self.data.shape[0]) * 100
+
         column_details = {
             'Data_type': str(dtype),
             'missing_values': int(missing_vals),
             'missing_%': float(missing_percentage)
-        }   
+        }
 
-    # Generate alerts for the column
-        alert_details = generate_alerts(column_details)
+        if not self.settings.minimal:
+            inferred_type = self.typeset.infer_type(column_data)
+            registry_func = analyzer_registry.get(inferred_type, _analyse_generic)
+            column_details.update(registry_func(self, column_data))
+            # Pass outliers for numeric columns
+            outliers = column_details.get('outliers', []) if inferred_type in [Float, Integer] else None
+            column_details['plot_base64'] = get_plot_as_base64(column_data, column_name, outliers=outliers)
+
+        # Generate alerts for the column (AFTER type-specific analysis to include outlier stats)
+        alert_details = generate_alerts(column_details, settings=self.settings)  # Pass settings
         column_details['alerts'] = alert_details
 
-
-        if not self.settings.minimal: # If minimal is False, we perform basic analysis
-            
-            inferred_type = self.typeset.infer_type(column_data) # or np.dtype(column_data)
-            
-            registry_func = analyzer_registry.get(inferred_type,_analyse_generic) # Get the registered analyzer function
-
-            column_details.update(registry_func(self,column_data))
-            
-            # used to pass the arguments to the visualizer.py to get the plot
-            plot_string = get_plot_as_base64(column_data, column_name)
-            column_details['plot_base64'] = plot_string
-                
-            
         return column_details
 
     

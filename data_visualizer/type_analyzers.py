@@ -4,6 +4,43 @@ from visions.typesets import VisionsTypeset  #used to get the types
 from visions.types import Numeric, Boolean, Categorical, String, Object, Float, Integer
 from .type_registry import register_analyzer
 
+import pandas as pd
+import numpy as np
+from visions.types import Float, Integer
+
+
+'''
+    Detect outliers using IQR method.
+    
+    Args:
+        column_data: pandas Series with numeric data
+        threshold: IQR multiplier (e.g., 1.5 for standard bounds)
+    
+    Returns:
+        Dict with outlier_count, outlier_percentage, and outliers list
+    '''
+
+def _detect_outliers_iqr(column_data: pd.Series, threshold: float) -> dict:
+    
+    if column_data.empty or not pd.api.types.is_numeric_dtype(column_data):
+        return {'outlier_count': 0, 'outlier_percentage': 0.0, 'outliers': []}
+    
+    Q1 = column_data.quantile(0.25)
+    Q3 = column_data.quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - threshold * IQR
+    upper_bound = Q3 + threshold * IQR
+    
+    outliers = column_data[(column_data < lower_bound) | (column_data > upper_bound)]
+    outlier_count = len(outliers)
+    total_count = len(column_data)
+    outlier_percentage = (outlier_count / total_count * 100) if total_count > 0 else 0.0
+    
+    return {
+        'outlier_count': outlier_count,
+        'outlier_percentage': outlier_percentage,
+        'outliers': outliers.tolist()  # JSON-serializable
+    }
 
 @register_analyzer(Float)
 @register_analyzer(Integer)
@@ -17,6 +54,9 @@ def _analyse_numeric(report_object, column_data):
         # calculate kurtosis and add it
         numeric_stats['kurtosis'] = column_data.kurt()
             
+        # Add outlier detection using settings threshold
+        outlier_info = _detect_outliers_iqr(column_data, report_object.settings.outlier_threshold)
+        numeric_stats.update(outlier_info)
         return numeric_stats
 
 
@@ -58,3 +98,6 @@ def _analyse_generic(report_object,column_data):
     }
 
     return generic_stats
+
+
+
