@@ -28,7 +28,8 @@ dependencies = [
     "shapely",
     "visions[complete]",
     "tqdm",
-    "colorama"    
+    "colorama",
+    "wordcloud"
 ]
 
 [tool.setuptools]

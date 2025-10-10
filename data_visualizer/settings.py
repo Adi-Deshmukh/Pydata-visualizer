@@ -10,6 +10,8 @@ class Settings(BaseModel):
     skewness_threshold: float = Field(default=1.0, ge=0.0)
     outlier_method: str = Field(default='iqr', pattern='^(iqr|zscore)$')
     outlier_threshold: float = Field(default=1.5, ge=0.0)
+    duplicate_threshold: float = Field(default=5.0, ge=0.0)  # % of rows duplicated to trigger alert
+    text_analysis: bool = True  # Enable/disable text analysis
 
     class Config:
         str_strip_whitespace = True

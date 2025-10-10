@@ -1,9 +1,8 @@
 import io
 import math
-from statistics import correlation
 import numpy as np
 import pandas as pd
-from scipy.stats import norm, chi2_contingency
+from scipy.stats import chi2_contingency
 from itertools import combinations
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -30,17 +29,19 @@ def calculate_correlations(data):
         # Created a Correlation Matrix for Cramér's V results to solve the return problem
         cramers_v_matrix.loc[col1, col2] = cramers_v
         cramers_v_matrix.loc[col2, col1] = cramers_v  # To make the result symmetrical
-        
-        np.fill_diagonal(cramers_v_matrix.values, 1.0)  # To fill diagonal with 1s as they were NaN
+    
+    # Fill diagonal with 1s after processing all pairs
+    if len(categorical_columns) > 0:
+        np.fill_diagonal(cramers_v_matrix.values, 1.0)
         cramers_v_matrix = cramers_v_matrix.astype(float)
-        
-        correlations = {
-            "pearson": pearson_corr,
-            "spearman": spearman_corr,
-            "cramers_v": cramers_v_matrix
-            }
-        
-        return correlations
+    
+    correlations = {
+        "pearson": pearson_corr,
+        "spearman": spearman_corr,
+        "cramers_v": cramers_v_matrix
+    }
+    
+    return correlations
 
     
 

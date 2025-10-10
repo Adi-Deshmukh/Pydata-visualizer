@@ -6,8 +6,8 @@ from data_visualizer.report import generate_html_report
 
 
 
-#df = pd.read_csv(r"C:\Users\kiran\Downloads\netflix.csv")
-df = pd.read_csv(r"C:\Users\kiran\final_vg.csv")
+df = pd.read_csv(r"C:\Users\kiran\Downloads\netflix.csv")
+#df = pd.read_csv(r"C:\Users\kiran\final_vg.csv")
 
 report_settings = Settings(
     minimal=False,          #  want a fast report
