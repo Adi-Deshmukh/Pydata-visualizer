@@ -93,9 +93,13 @@ from data_visualizer.profiler import Settings, AnalysisReport
 
 # Custom settings
 settings = Settings(
-    minimal=False,           # Full analysis (True for faster, minimal analysis)
-    top_n_values=5,          # Show top 5 values in categorical columns
-    skewness_threshold=2.0   # Alert threshold for skewness
+    minimal=False,              # Full analysis (True for faster, minimal analysis)
+    top_n_values=5,             # Show top 5 values in categorical columns
+    skewness_threshold=2.0,     # Alert threshold for skewness
+    outlier_method='iqr',       # Outlier detection method: 'iqr' or 'zscore'
+    outlier_threshold=1.5,      # IQR multiplier for outlier detection
+    duplicate_threshold=5.0,    # Alert if duplicates exceed 5% of dataset
+    text_analysis=True          # Enable word frequency analysis for text columns
 )
 
 # Create report with custom settings
@@ -107,9 +111,13 @@ report.to_html("custom_report.html")
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| minimal | bool | False | If True, performs basic analysis only |
-| top_n_values | int | 10 | Number of top values to show in categorical analysis |
-| skewness_threshold | float | 1.0 | Threshold for skewness alerts |
+| minimal | bool | False | If True, performs basic analysis only (skips visualizations) |
+| top_n_values | int | 10 | Number of top values to show in categorical analysis (>= 1) |
+| skewness_threshold | float | 1.0 | Threshold for skewness alerts (>= 0.0) |
+| outlier_method | str | 'iqr' | Outlier detection method: 'iqr' or 'zscore' |
+| outlier_threshold | float | 1.5 | IQR multiplier for outlier detection (>= 0.0) |
+| duplicate_threshold | float | 5.0 | Percentage of duplicates to trigger alert (>= 0.0) |
+| text_analysis | bool | True | Enable word frequency analysis and word clouds for text |
 
 ## Analysis Methods
 
@@ -122,17 +130,29 @@ report.to_html("custom_report.html")
 
 ### Numeric Column Analysis
 
-- Standard statistics (min, max, mean, median, etc.)
+- Standard statistics (min, max, mean, median, std, quartiles)
 - Skewness and kurtosis
-- Distribution histograms with KDE
+- Outlier detection using IQR or Z-score methods
+- Outlier count and percentage
+- Distribution histograms with KDE and outlier highlighting
 
 ### Categorical Column Analysis
 
 - Unique value count
 - Most frequent value
-- Cardinality assessment
-- Top N value counts
+- Cardinality assessment (High/Low)
+- Top N value counts (configurable)
 - Bar charts for frequency distribution
+
+### String/Text Column Analysis
+
+- Unique value count
+- Most frequent value
+- Cardinality assessment (High/Low)
+- Top N value counts (configurable)
+- Word frequency analysis (when text_analysis is enabled)
+- Word cloud generation (when text_analysis is enabled)
+- Bar charts for value distribution
 
 ### Boolean Column Analysis
 
@@ -143,8 +163,9 @@ report.to_html("custom_report.html")
 
 The library automatically generates appropriate visualizations based on data type:
 
-- **Numeric columns**: Histograms with kernel density estimation
+- **Numeric columns**: Histograms with kernel density estimation, outliers highlighted in red
 - **Categorical columns**: Bar charts for top values
+- **Text columns**: Word clouds showing word frequency and bar charts for value counts
 - **Correlation matrices**: Heatmap visualizations
 
 Visualizations are embedded directly in the HTML report as base64-encoded images.
@@ -283,10 +304,28 @@ class Settings(pydantic.BaseModel):
     Attributes:
     -----------
     minimal : bool, default=False
-        Whether to perform minimal analysis
+        Whether to perform minimal analysis (skips type-specific analysis and visualizations)
+    
     top_n_values : int, default=10
-        Number of top values to show for categorical columns
+        Number of top values to show for categorical columns (must be >= 1)
+    
     skewness_threshold : float, default=1.0
+        Threshold for skewness alerts (must be >= 0.0)
+    
+    outlier_method : str, default='iqr'
+        Outlier detection method: 'iqr' (Interquartile Range) or 'zscore'
+    
+    outlier_threshold : float, default=1.5
+        IQR multiplier for outlier detection (must be >= 0.0)
+        Standard: 1.5 for moderate outliers, 3.0 for extreme outliers
+    
+    duplicate_threshold : float, default=5.0
+        Percentage of duplicate rows to trigger an alert (must be >= 0.0)
+    
+    text_analysis : bool, default=True
+        Enable word frequency analysis and word cloud generation for text columns
+    """
+```
         Threshold for skewness alerts
     """
 ```

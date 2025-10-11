@@ -86,11 +86,15 @@ For each column in your dataset:
 - **Data type**: Detected data type
 - **Missing values**: Count and percentage
 - **Type-specific statistics**:
-  - For numeric: min, max, mean, median, std, quartiles, skewness, kurtosis
-  - For categorical: unique values, most frequent values, cardinality
+  - For numeric: min, max, mean, median, std, quartiles, skewness, kurtosis, outlier detection
+  - For categorical: unique values, most frequent values, cardinality, top N value counts
+  - For string/text: unique values, cardinality, top N value counts, word frequency analysis
   - For boolean: value counts and proportions
-- **Visualizations**: Distribution plots or bar charts
-- **Alerts**: Warnings about potential data issues
+- **Visualizations**: 
+  - Distribution plots for numeric data with outlier highlighting
+  - Bar charts for categorical data
+  - Word clouds for text data (when text_analysis is enabled)
+- **Alerts**: Warnings about potential data issues (missing values, outliers, skewness)
 
 ### Sample Data
 
@@ -112,9 +116,13 @@ from data_visualizer.profiler import AnalysisReport, Settings
 
 # Create custom settings
 settings = Settings(
-    minimal=False,           # Full analysis
-    top_n_values=5,          # Show top 5 values in categorical columns
-    skewness_threshold=2.0   # Alert threshold for skewness
+    minimal=False,              # Full analysis with all features
+    top_n_values=5,             # Show top 5 values in categorical columns
+    skewness_threshold=2.0,     # Alert threshold for skewness
+    outlier_method='iqr',       # Outlier detection method: 'iqr' or 'zscore'
+    outlier_threshold=1.5,      # IQR multiplier for outlier detection
+    duplicate_threshold=5.0,    # Alert if duplicates exceed 5% of dataset
+    text_analysis=True          # Enable word frequency and word cloud for text
 )
 
 # Apply settings to report
@@ -126,9 +134,13 @@ report.to_html("custom_report.html")
 
 ### Settings Options
 
-- **minimal** (bool): If True, performs minimal analysis (faster)
-- **top_n_values** (int): Number of top values to show for categorical variables
-- **skewness_threshold** (float): Threshold for flagging skewed distributions
+- **minimal** (bool): If True, performs minimal analysis (faster, skips visualizations and type-specific analysis)
+- **top_n_values** (int): Number of top values to show for categorical variables (default: 10)
+- **skewness_threshold** (float): Threshold for flagging skewed distributions (default: 1.0)
+- **outlier_method** (str): Method for outlier detection - 'iqr' (Interquartile Range) or 'zscore' (default: 'iqr')
+- **outlier_threshold** (float): IQR multiplier for outlier detection (default: 1.5, use 3.0 for extreme outliers only)
+- **duplicate_threshold** (float): Percentage of duplicate rows to trigger an alert (default: 5.0)
+- **text_analysis** (bool): Enable word frequency analysis and word cloud generation for text columns (default: True)
 
 ## 5. Working with Large Datasets
 

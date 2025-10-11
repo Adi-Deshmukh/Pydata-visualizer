@@ -8,12 +8,14 @@ Pydata-visualizer is designed to help data scientists and analysts quickly explo
 
 ### Key Features
 
--  **Comprehensive Data Profiling**: Analyze numerical, categorical, boolean, and string data types
--  **Automated Data Quality Checks**: Detect missing values, outliers, skewed distributions, and more
--  **Interactive Visualizations**: Generate distribution plots, correlations heatmaps, and statistical charts
--  **Rich HTML Reports**: Export analysis to visually appealing and shareable HTML reports
--  **Performance Optimized**: Fast analysis even on large datasets
--  **Correlation Analysis**: Calculate Pearson, Spearman, and Cramér's V correlations between variables
+- Comprehensive Data Profiling: Analyze numerical, categorical, boolean, and string data types
+- Automated Data Quality Checks: Detect missing values, outliers, skewed distributions, duplicate rows, and more
+- Interactive Visualizations: Generate distribution plots, correlation heatmaps, word clouds, and statistical charts
+- Text Analysis: Automatic word frequency analysis and word cloud generation for text columns
+- Rich HTML Reports: Export analysis to visually appealing and shareable HTML reports
+- Performance Optimized: Fast analysis even on large datasets
+- Correlation Analysis: Calculate Pearson, Spearman, and Cramér's V correlations between variables
+- Flexible Configuration: Customize analysis thresholds and options via the Settings class
 
 ### Quick Example
 

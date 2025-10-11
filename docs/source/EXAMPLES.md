@@ -70,9 +70,13 @@ df = pd.read_csv("customer_data.csv")
 
 # Custom settings
 settings = Settings(
-    minimal=False,           # Full analysis
-    top_n_values=5,          # Show top 5 values in categorical columns
-    skewness_threshold=1.5   # Lower threshold for skewness alerts
+    minimal=False,              # Full analysis with all features
+    top_n_values=5,             # Show top 5 values in categorical columns
+    skewness_threshold=1.5,     # Lower threshold for skewness alerts
+    outlier_method='iqr',       # Use IQR method for outlier detection
+    outlier_threshold=1.5,      # Standard IQR multiplier
+    duplicate_threshold=3.0,    # Alert if duplicates exceed 3%
+    text_analysis=True          # Enable word cloud and frequency analysis
 )
 
 # Create and generate report with custom settings
@@ -140,11 +144,55 @@ data = {
 financial_df = pd.DataFrame(data)
 
 # Settings for financial analysis (higher skewness tolerance)
-financial_settings = Settings(skewness_threshold=3.0)
+financial_settings = Settings(skewness_threshold=3.0, outlier_threshold=3.0)
 
 # Create and generate report
 financial_report = AnalysisReport(financial_df, settings=financial_settings)
 financial_report.to_html("financial_report.html")
+```
+
+## Text Data Analysis
+
+### Analyzing Text Columns with Word Clouds
+
+```python
+import pandas as pd
+from data_visualizer.profiler import AnalysisReport, Settings
+
+# Create sample dataset with text reviews
+df = pd.DataFrame({
+    'product_id': range(1, 101),
+    'customer_review': [
+        'excellent product quality amazing', 'good value for money',
+        'poor customer service disappointed', 'fast delivery great experience',
+        'highly recommend excellent', 'defective item bad quality'
+    ] * 16 + ['great product'] * 4,
+    'rating': [5, 4, 2, 5, 5, 1] * 16 + [5] * 4
+})
+
+# Enable text analysis for word clouds
+settings = Settings(text_analysis=True, top_n_values=10)
+
+# Create report - will generate word clouds for text columns
+report = AnalysisReport(df, settings=settings)
+report.to_html("text_analysis_report.html")
+
+# Word clouds will show frequently occurring words in the reviews
+# Bar charts will show the most common complete review texts
+```
+
+### Disabling Text Analysis for Performance
+
+```python
+import pandas as pd
+from data_visualizer.profiler import AnalysisReport, Settings
+
+# For datasets with many text columns, disable text analysis for faster processing
+settings = Settings(text_analysis=False)
+
+# Create report without word frequency analysis
+report = AnalysisReport(large_text_df, settings=settings)
+report.to_html("no_text_analysis_report.html")
 ```
 
 ## Processing Large Datasets
