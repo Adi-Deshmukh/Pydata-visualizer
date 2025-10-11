@@ -9,7 +9,7 @@
 project = 'pydata-visualizer'
 copyright = '2025, Aditya Deshmukh'
 author = 'Aditya Deshmukh'
-release = '0.2.2'
+release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -42,3 +42,4 @@ source_suffix = ['.rst', '.md']
 
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
+
