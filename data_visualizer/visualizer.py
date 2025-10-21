@@ -70,13 +70,14 @@ def get_plot_as_base64(column_data: pd.Series, column_name: str, settings: "Sett
             plt.style.use('seaborn-v0_8-whitegrid')
 
             if pd.api.types.is_numeric_dtype(column_data):
-                if outliers is not None:
+                if outliers is not None and len(outliers) > 0:
+                    # Split data into inliers and outliers for highlighting
                     inliers = column_data[~column_data.isin(outliers)]
                     sns.histplot(inliers, kde=True, bins=20, color="#17a2b8", label='Inliers')
-                    if outliers:
-                        sns.histplot(outliers, kde=False, bins=20, color="#dc3545", alpha=0.5, label='Outliers')
+                    sns.histplot(outliers, kde=False, bins=20, color="#dc3545", alpha=0.5, label='Outliers')
                     plt.legend()
                 else:
+                    # No outliers detected, show normal histogram
                     sns.histplot(column_data, kde=True, bins=20, color="#17a2b8")
                 plt.title(f'Distribution of {column_name}')
             elif word_frequencies is not None and word_frequencies:

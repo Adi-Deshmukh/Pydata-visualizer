@@ -69,9 +69,10 @@ class AnalysisReport:
                         column_data, column_name, settings=self.settings,
                         outliers=None, word_frequencies=None  # Force bar chart
                     )
-                
-                # Remove outlier_indices from output (only needed for plotting)
-                column_details.pop('outlier_indices', None)
+            
+            # Remove internal visualization data from output (only needed for plotting, not for JSON)
+            column_details.pop('outlier_indices', None)
+            column_details.pop('word_frequencies', None)
 
         # Generate alerts for the column (AFTER type-specific analysis to include outlier stats)
         if self.settings.include_alerts:
@@ -130,8 +131,10 @@ class AnalysisReport:
             sample_data = self._data_sample()
             final_results['Sample_data'] = sample_data
 
+        # Initialize correlation results
         correlations_plots = {}
         correlations_json = {}
+        
         if self.settings.include_correlations:
             correlations = calculate_correlations(self.data)
             if correlations:
@@ -144,8 +147,11 @@ class AnalysisReport:
                         if self.settings.include_correlations_json:
                             correlations_json[key] = value.to_dict()
 
-        final_results['Correlations_Plots'] = correlations_plots
-        final_results['Correlations_JSON'] = correlations_json
+            # Add to results based on settings flags (only if include_correlations is True)
+            if self.settings.include_correlations_plots:
+                final_results['Correlations_Plots'] = correlations_plots
+            if self.settings.include_correlations_json:
+                final_results['Correlations_JSON'] = correlations_json
 
         print(Fore.GREEN + "--- Full Analysis Done ---" + Style.BRIGHT)
         self.results = final_results
