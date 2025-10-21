@@ -70,18 +70,80 @@ df = pd.read_csv("customer_data.csv")
 
 # Custom settings
 settings = Settings(
-    minimal=False,              # Full analysis with all features
-    top_n_values=5,             # Show top 5 values in categorical columns
-    skewness_threshold=1.5,     # Lower threshold for skewness alerts
-    outlier_method='iqr',       # Use IQR method for outlier detection
-    outlier_threshold=1.5,      # Standard IQR multiplier
-    duplicate_threshold=3.0,    # Alert if duplicates exceed 3%
-    text_analysis=True          # Enable word cloud and frequency analysis
+    minimal=False,                      # Full analysis with all features
+    top_n_values=5,                     # Show top 5 values in categorical columns
+    skewness_threshold=1.5,             # Lower threshold for skewness alerts
+    outlier_method='iqr',               # Use IQR method for outlier detection
+    outlier_threshold=1.5,              # Standard IQR multiplier
+    duplicate_threshold=3.0,            # Alert if duplicates exceed 3%
+    text_analysis=True,                 # Enable word cloud and frequency analysis
+    use_plotly=False,                   # Use static Seaborn/Matplotlib plots (default)
+    include_plots=True,                 # Include visualizations
+    include_correlations=True,          # Include correlation analysis
+    include_correlations_plots=True,    # Include correlation heatmaps
+    include_correlations_json=False,    # Don't include raw correlation JSON
+    include_alerts=True,                # Include data quality alerts
+    include_sample_data=True,           # Include head/tail samples
+    include_overview=True               # Include overview statistics
 )
 
 # Create and generate report with custom settings
 report = AnalysisReport(df, settings=settings)
 report.to_html("custom_report.html")
+```
+
+### Interactive Visualizations with Plotly
+
+```python
+import pandas as pd
+from data_visualizer.profiler import AnalysisReport, Settings
+
+# Load data
+df = pd.read_csv("sales_data.csv")
+
+# Enable Plotly for interactive visualizations
+plotly_settings = Settings(
+    use_plotly=True,                    # Enable interactive Plotly charts
+    text_analysis=True,                 # Generate word clouds for text
+    outlier_method='iqr',               # Detect outliers with IQR method
+    include_plots=True,                 # Include visualizations
+    include_correlations=True,          # Include correlations
+    include_correlations_plots=True     # Include correlation heatmaps
+)
+
+# Create report with interactive charts
+interactive_report = AnalysisReport(df, settings=plotly_settings)
+interactive_report.to_html("interactive_report.html")
+
+# The generated report will have:
+# - Interactive histograms that you can zoom and pan
+# - Hover tooltips showing exact values
+# - Interactive correlation heatmaps (if using Plotly for correlations)
+# - Responsive charts that work on mobile devices
+```
+
+### Comparing Static vs Interactive Visualizations
+
+```python
+import pandas as pd
+from data_visualizer.profiler import AnalysisReport, Settings
+
+df = pd.read_csv("dataset.csv")
+
+# Generate report with static Seaborn plots
+static_settings = Settings(use_plotly=False)
+static_report = AnalysisReport(df, settings=static_settings)
+static_report.to_html("static_report.html")
+
+# Generate report with interactive Plotly charts
+interactive_settings = Settings(use_plotly=True)
+interactive_report = AnalysisReport(df, settings=interactive_settings)
+interactive_report.to_html("interactive_report.html")
+
+# Compare the two reports:
+# - Static: Faster generation, smaller file size, publication-ready images
+# - Interactive: Zoom/pan, hover tooltips, better for exploration
+
 ```
 
 ### Minimal Analysis for Quick Overview
@@ -94,7 +156,12 @@ from data_visualizer.profiler import AnalysisReport, Settings
 df = pd.read_csv("large_dataset.csv")
 
 # Minimal settings for fast processing
-minimal_settings = Settings(minimal=True)
+minimal_settings = Settings(
+    minimal=True,                       # Skip type-specific analysis and visualizations
+    include_plots=False,                # Don't generate plots
+    include_correlations=False,         # Skip correlation analysis
+    include_sample_data=False           # Skip sample data for even faster processing
+)
 
 # Create and generate quick report
 quick_report = AnalysisReport(df, settings=minimal_settings)
@@ -144,7 +211,14 @@ data = {
 financial_df = pd.DataFrame(data)
 
 # Settings for financial analysis (higher skewness tolerance)
-financial_settings = Settings(skewness_threshold=3.0, outlier_threshold=3.0)
+financial_settings = Settings(
+    skewness_threshold=3.0,             # Higher tolerance for skewed financial data
+    outlier_threshold=3.0,              # Only flag extreme outliers
+    text_analysis=False,                # No text analysis for financial data
+    include_correlations=True,          # Important for financial analysis
+    include_correlations_plots=True,    # Visualize correlations
+    include_alerts=True                 # Monitor data quality
+)
 
 # Create and generate report
 financial_report = AnalysisReport(financial_df, settings=financial_settings)
@@ -171,7 +245,12 @@ df = pd.DataFrame({
 })
 
 # Enable text analysis for word clouds
-settings = Settings(text_analysis=True, top_n_values=10)
+settings = Settings(
+    text_analysis=True,                 # Enable word frequency and word clouds
+    top_n_values=10,                    # Show top 10 complete values
+    include_plots=True,                 # Generate visualizations
+    use_plotly=False                    # Use WordCloud library (better for text)
+)
 
 # Create report - will generate word clouds for text columns
 report = AnalysisReport(df, settings=settings)
@@ -188,7 +267,10 @@ import pandas as pd
 from data_visualizer.profiler import AnalysisReport, Settings
 
 # For datasets with many text columns, disable text analysis for faster processing
-settings = Settings(text_analysis=False)
+settings = Settings(
+    text_analysis=False,                # Disable word frequency analysis
+    include_plots=True                  # Still show bar charts for value distribution
+)
 
 # Create report without word frequency analysis
 report = AnalysisReport(large_text_df, settings=settings)
@@ -303,15 +385,22 @@ results = report.analyse()
 # Extract and save a specific column's visualization
 if 'price' in results['variables']:
     price_info = results['variables']['price']
-    if 'plot_base64' in price_info:
+    if 'plot' in price_info and price_info['plot']['type'] == 'base64':
         # Extract the base64 image data (remove header info)
-        img_data = price_info['plot_base64'].split(',')[1]
+        img_data = price_info['plot']['data'].split(',')[1]
         
         # Decode and save to file
         with open("price_distribution.png", "wb") as f:
             f.write(base64.b64decode(img_data))
         
         print("Saved price distribution plot as price_distribution.png")
+    elif 'plot' in price_info and price_info['plot']['type'] == 'plotly':
+        # For Plotly plots, you can save the JSON data
+        import json
+        with open("price_distribution.json", "w") as f:
+            json.dump(price_info['plot']['data'], f)
+        
+        print("Saved Plotly plot data as price_distribution.json")
         
 # Extract and save correlation heatmap
 if 'pearson' in results['Correlations_Plots']:

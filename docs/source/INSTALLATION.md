@@ -89,7 +89,7 @@ pip install pydata-visualizer
 If you encounter errors related to missing dependencies, try installing them explicitly:
 
 ```bash
-pip install pandas matplotlib seaborn numpy scipy jinja2 visions pydantic colorama tqdm imagehash
+pip install pandas matplotlib seaborn numpy scipy jinja2 visions pydantic colorama tqdm imagehash wordcloud plotly shapely
 ```
 
 ### Matplotlib Backend Issues
@@ -134,6 +134,8 @@ The following dependencies will be automatically installed:
 - visions
 - tqdm
 - colorama
+- wordcloud
+- plotly
 
 ## Upgrading
 

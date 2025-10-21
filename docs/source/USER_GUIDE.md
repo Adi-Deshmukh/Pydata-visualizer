@@ -76,36 +76,46 @@ The HTML report contains several sections:
 - **Dataset Overview**: Shows basic dataset information
   - Number of rows
   - Number of columns
-  - Number of duplicate rows
-  - Missing values count and percentage
+  - Number of duplicate rows with percentage
+  - Duplicate row indices (list of row positions)
+  - Duplicate samples (first 5 duplicate row groups shown)
+  - Missing values count and percentage (across entire dataset)
+  - Dataset-level alerts (e.g., high duplicate rate if exceeds threshold)
 
 ### Variables Section
 
 For each column in your dataset:
 
-- **Data type**: Detected data type
+- **Data type**: Detected data type (pandas dtype)
 - **Missing values**: Count and percentage
 - **Type-specific statistics**:
-  - For numeric: min, max, mean, median, std, quartiles, skewness, kurtosis, outlier detection
-  - For categorical: unique values, most frequent values, cardinality, top N value counts
-  - For string/text: unique values, cardinality, top N value counts, word frequency analysis
+  - For numeric: min, max, mean, median, std, quartiles (25%, 50%, 75%), skewness, kurtosis, outlier detection (count, percentage, and indices)
+  - For categorical: unique values count, most frequent value, cardinality (High if >50 unique values, Low otherwise), top N value counts (configurable via top_n_values setting)
+  - For string/text: unique values count, most frequent value, cardinality (High/Low), top N value counts, word frequency analysis (when text_analysis is enabled)
   - For boolean: value counts and proportions
 - **Visualizations**: 
-  - Distribution plots for numeric data with outlier highlighting
-  - Bar charts for categorical data
-  - Word clouds for text data (when text_analysis is enabled)
-- **Alerts**: Warnings about potential data issues (missing values, outliers, skewness)
+  - Distribution histograms with KDE for numeric data, with outliers highlighted in red (when outliers are detected)
+  - Bar charts for categorical data showing top 10 most frequent values
+  - Word clouds for text data (when text_analysis is enabled), plus bar charts for value distribution
+  - For Plotly mode: interactive charts with zoom, pan, and hover tooltips
+  - For Seaborn mode: static, publication-ready images
+- **Alerts**: Warnings about potential data issues
+  - Missing values alert when >20% of data is missing
+  - Outliers alert showing count and percentage
+  - Skewness alert when absolute skewness exceeds configured threshold
 
 ### Sample Data
 
-- Shows the first and last 10 rows of your dataset
+- Shows the first 10 rows (head) of your dataset in HTML table format
+- Shows the last 10 rows (tail) of your dataset in HTML table format
 
 ### Correlations
 
-- **Pearson correlation**: For linear relationships between numerical variables
-- **Spearman correlation**: For monotonic relationships
-- **Cramér's V**: For relationships between categorical variables
-- **Heatmaps**: Visual representation of all correlation matrices
+- **Pearson correlation**: For linear relationships between numerical variables (range: -1 to +1)
+- **Spearman correlation**: For monotonic relationships between numerical variables (range: -1 to +1)
+- **Cramér's V**: For relationships between categorical variables (range: 0 to 1)
+- **Heatmaps**: Visual representation of all correlation matrices (when include_correlations_plots is True)
+- **JSON data**: Raw correlation matrices in JSON format (when include_correlations_json is True)
 
 ## 4. Advanced Configuration
 
@@ -116,13 +126,21 @@ from data_visualizer.profiler import AnalysisReport, Settings
 
 # Create custom settings
 settings = Settings(
-    minimal=False,              # Full analysis with all features
-    top_n_values=5,             # Show top 5 values in categorical columns
-    skewness_threshold=2.0,     # Alert threshold for skewness
-    outlier_method='iqr',       # Outlier detection method: 'iqr' or 'zscore'
-    outlier_threshold=1.5,      # IQR multiplier for outlier detection
-    duplicate_threshold=5.0,    # Alert if duplicates exceed 5% of dataset
-    text_analysis=True          # Enable word frequency and word cloud for text
+    minimal=False,                      # Full analysis with all features
+    top_n_values=5,                     # Show top 5 values in categorical columns
+    skewness_threshold=2.0,             # Alert threshold for skewness
+    outlier_method='iqr',               # Outlier detection method: 'iqr' or 'zscore'
+    outlier_threshold=1.5,              # IQR multiplier for outlier detection
+    duplicate_threshold=5.0,            # Alert if duplicates exceed 5% of dataset
+    text_analysis=True,                 # Enable word frequency and word cloud for text
+    use_plotly=False,                   # Use static Seaborn/Matplotlib plots
+    include_plots=True,                 # Include visualizations
+    include_correlations=True,          # Include correlation analysis
+    include_correlations_plots=True,    # Include correlation heatmaps
+    include_correlations_json=False,    # Don't include raw correlation JSON
+    include_alerts=True,                # Include data quality alerts
+    include_sample_data=True,           # Include head/tail samples
+    include_overview=True               # Include overview statistics
 )
 
 # Apply settings to report
@@ -134,13 +152,21 @@ report.to_html("custom_report.html")
 
 ### Settings Options
 
-- **minimal** (bool): If True, performs minimal analysis (faster, skips visualizations and type-specific analysis)
-- **top_n_values** (int): Number of top values to show for categorical variables (default: 10)
-- **skewness_threshold** (float): Threshold for flagging skewed distributions (default: 1.0)
-- **outlier_method** (str): Method for outlier detection - 'iqr' (Interquartile Range) or 'zscore' (default: 'iqr')
-- **outlier_threshold** (float): IQR multiplier for outlier detection (default: 1.5, use 3.0 for extreme outliers only)
-- **duplicate_threshold** (float): Percentage of duplicate rows to trigger an alert (default: 5.0)
-- **text_analysis** (bool): Enable word frequency analysis and word cloud generation for text columns (default: True)
+- **minimal** (bool): If True, performs minimal analysis (faster, skips visualizations and type-specific analysis). Default: False
+- **top_n_values** (int): Number of top values to show for categorical variables (must be >= 1). Default: 10
+- **skewness_threshold** (float): Threshold for flagging skewed distributions (must be >= 0.0). Default: 1.0
+- **outlier_method** (str): Method for outlier detection - 'iqr' (Interquartile Range) or 'zscore'. Default: 'iqr'
+- **outlier_threshold** (float): IQR multiplier for outlier detection (must be >= 0.0). Default: 1.5 (use 3.0 for extreme outliers only)
+- **duplicate_threshold** (float): Percentage of duplicate rows to trigger an alert (must be >= 0.0). Default: 5.0
+- **text_analysis** (bool): Enable word frequency analysis and word cloud generation for text columns. Default: True
+- **use_plotly** (bool): Use Plotly for interactive visualizations instead of Seaborn/Matplotlib static plots. Default: False
+- **include_plots** (bool): Include visualizations/plots in the analysis. Default: True
+- **include_correlations** (bool): Include correlation analysis. Default: True
+- **include_correlations_plots** (bool): Include correlation heatmaps. Default: True
+- **include_correlations_json** (bool): Include correlation data in JSON format. Default: False
+- **include_alerts** (bool): Include data quality alerts (column and dataset-level). Default: True
+- **include_sample_data** (bool): Include head/tail data samples (first and last 10 rows). Default: True
+- **include_overview** (bool): Include dataset overview statistics. Default: True
 
 ## 5. Working with Large Datasets
 
@@ -149,7 +175,10 @@ For large datasets, consider these approaches:
 ### Use minimal analysis
 
 ```python
-settings = Settings(minimal=True)
+settings = Settings(
+    minimal=True,             # Skip type-specific analysis and visualizations
+    include_plots=False       # Also disable plots for fastest processing
+)
 report = AnalysisReport(large_df, settings=settings)
 ```
 
@@ -195,7 +224,12 @@ from data_visualizer.profiler import AnalysisReport, Settings
 df = pd.read_csv("dataset_to_check.csv")
 
 # Set stricter thresholds for data quality
-settings = Settings(skewness_threshold=1.5)
+settings = Settings(
+    skewness_threshold=1.5,             # Lower threshold for skewness
+    duplicate_threshold=3.0,            # Lower threshold for duplicates
+    outlier_threshold=1.5,              # Standard IQR multiplier
+    include_alerts=True                 # Ensure alerts are included
+)
 
 # Generate data quality report
 report = AnalysisReport(df, settings=settings)
@@ -206,13 +240,16 @@ report.to_html("quality_report.html")
 
 ```python
 import pandas as pd
-from data_visualizer.profiler import AnalysisReport
+from data_visualizer.profiler import AnalysisReport, Settings
 
 # Load your dataset
 df = pd.read_csv("features.csv")
 
+# Enable correlation JSON output to access correlation data programmatically
+settings = Settings(include_correlations_json=True)
+
 # Generate report with focus on correlations
-report = AnalysisReport(df)
+report = AnalysisReport(df, settings=settings)
 results = report.analyse()
 
 # Access correlation matrices programmatically
@@ -227,7 +264,7 @@ strong_correlations = [(col1, col2) for col1 in pearson_corr
 
 print("Strongly correlated features:", strong_correlations)
 
-# Generate complete report
+# Generate complete report (will include correlation heatmaps)
 report.to_html("correlations_report.html")
 ```
 

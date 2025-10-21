@@ -20,14 +20,24 @@ This repository contains comprehensive documentation for the Pydata-visualizer P
 
 ```python
 import pandas as pd
-from data_visualizer.profiler import AnalysisReport
+from data_visualizer.profiler import AnalysisReport, Settings
 
 # Load your dataset
 df = pd.read_csv("your_dataset.csv")
 
-# Create a report with default settings
+# Create a report with default settings (uses Seaborn plots)
 report = AnalysisReport(df)
 report.to_html("report.html")
+
+# Or use interactive Plotly visualizations with custom settings
+settings = Settings(
+    use_plotly=True,
+    text_analysis=True,
+    include_correlations=True,
+    include_alerts=True
+)
+report = AnalysisReport(df, settings=settings)
+report.to_html("interactive_report.html")
 ```
 
 ## Documentation Structure
