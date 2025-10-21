@@ -12,7 +12,8 @@ df = pd.read_csv(r"C:\Users\kiran\Downloads\netflix.csv")
 report_settings = Settings(
     minimal=False,          #  want a fast report
     top_n_values=3,        #  the top 3 values
-    skewness_threshold=2.0 #  tolerance for skewness
+    skewness_threshold=2.0, #  tolerance for skewness
+    use_plotly=True,    #  use Plotly for visualizations
 )
 
 # Create an instance of your class

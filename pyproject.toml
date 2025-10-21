@@ -1,6 +1,6 @@
 [project]
 name = "Pydata-visualizer"
-version = "1.0.0"
+version = "1.0.1"
 authors = [
     {name="Aditya Deshmukh", email="adideshmukh2005@gmail.com"},
 ]
@@ -29,7 +29,8 @@ dependencies = [
     "visions[complete]",
     "tqdm",
     "colorama",
-    "wordcloud"
+    "wordcloud",
+    "plotly"
 ]
 
 [tool.setuptools]
