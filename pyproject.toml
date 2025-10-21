@@ -1,6 +1,6 @@
 [project]
 name = "Pydata-visualizer"
-version = "1.0.1"
+version = "1.0.2"
 authors = [
     {name="Aditya Deshmukh", email="adideshmukh2005@gmail.com"},
 ]
